@@ -1,0 +1,23 @@
+-- listing properties --
+modelGraph=semi-markov
+trigram-this=true
+fourgram-this=true
+fourgram-freq-cutoff=1
+basedir=.
+preprocess=false
+numlabels=5
+others-field=Other
+bigram-freq-cutoff=1
+trigram-freq-cutoff=1
+lexicon-features=food
+lowerCase=false
+labelnames=data/semlab/semlab.classes
+epsForConvergence=0.1
+model-args=bcrf
+food-lexicon=lexicon/brandsNutritionixWiki.txt
+perfectAnnotationFile=/afs/csail.mit.edu/u/k/korpusik/nutri...
+inname=semlab
+outdir=semlab-fix-SL-NG
+bigram-this=true
+pos-features=this
+parse-tokenized=true

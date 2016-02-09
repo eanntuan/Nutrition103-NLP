@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="Nutrition103-NLP">
+        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <dependent-module archiveName="Utils.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/Utils/Utils">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="CRF.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/CRF/CRF">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="Nutrition103-NLP"/>
+        <property name="java-output-path" value="/Nutrition103-NLP/build/classes"/>
+    </wb-module>
+</project-modules>

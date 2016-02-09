@@ -1,0 +1,26 @@
+-- listing properties --
+modelGraph=semi-markov
+impdelimit=,
+trigram-this=true
+city-lexicon=data/eng/lexicons/city
+fourgram-this=true
+fourgram-freq-cutoff=1
+basedir=.
+preprocess=false
+numlabels=9
+others-field=Other
+delimit=,	/ -():.;'?#`&"_
+amenities-lexicon=data/eng/lexicons/amenities
+bigram-freq-cutoff=1
+trigram-freq-cutoff=1
+specialty-lexicon=data/eng/lexicons/specialty
+cuisine-lexicon=data/eng/lexicons/cuisine
+name-lexicon=data/eng/lexicons/name
+labelnames=data/eng/restaurant.classes
+lexicon-features=amenities/city/cuisine/name/specialty
+model-args=bcrf
+epsForConvergence=0.1
+inname=eng
+outdir=eng-fix-SL-NG
+bigram-this=true
+bigram=true
