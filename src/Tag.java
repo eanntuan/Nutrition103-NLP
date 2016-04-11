@@ -54,16 +54,16 @@ import edu.mit.csail.asgard.syntax.SentenceTagger;
 
 public class Tag extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Tag() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-    
-    public static String[] runMalletTagger(String text) throws FileNotFoundException, IOException, ClassNotFoundException{
+
+	/**
+	 * @see HttpServlet#HttpServlet()
+	 */
+	public Tag() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public static String[] runMalletTagger(String text) throws FileNotFoundException, IOException, ClassNotFoundException{
 		String[] labels = null;
 		InstanceList testData = null;
 		Pipe p = null;
@@ -71,7 +71,7 @@ public class Tag extends HttpServlet {
 		TransducerEvaluator eval = null;
 		int nBest = 1;
 		System.out.println("mallet tagger string: " + text);
-		
+
 		// use crf model saved to file "MalletModel"
 		//ObjectInputStream s = new ObjectInputStream(new FileInputStream("/usr/users/korpusik/workspace/Nutrition/WebContent/WEB-INF/models/MalletModel"));
 		ObjectInputStream s = new ObjectInputStream(NutritionContext.getResourceAsStream("WEB-INF/models/MalletModel"));
@@ -79,7 +79,7 @@ public class Tag extends HttpServlet {
 		s.close();
 		p = crf.getInputPipe();
 		p.setTargetProcessing(false);
-		
+
 		testData = new InstanceList(p);
 		//Reader testFile = new FileReader(new File("testSingleMealNoLabels"));
 		//testData.addThruPipe(new LineGroupIterator(testFile, Pattern.compile("^\\s*$"), true));
@@ -90,7 +90,7 @@ public class Tag extends HttpServlet {
 			Sequence input = (Sequence)testData.get(i).getData();
 			//System.out.println("input: "+input);
 			Sequence[] outputs = SimpleTagger.apply(crf, input, nBest);
-			System.out.println("applied Mallet CRF");
+			System.out.println("applied Mallet CRF in Nut103");
 			int k = outputs.length;
 			boolean error = false;
 			for (int a = 0; a < k; a++) {
@@ -112,62 +112,62 @@ public class Tag extends HttpServlet {
 				}
 			}
 		}
-		
+
 		//testFile.close();
 		return labels;
 	}    
-	
+
 	/*
 	 * Run PyNutrition CRFsuite on input meal description, return label strings.
 	 */
 	public static String[] runPyNutritionTagger(String text) throws IOException {
-		 // TODO: pre-load vectors (i.e. try to make it FAST!)
-		 // TODO: re-use results in db/img search instead of re-doing tagging
+		// TODO: pre-load vectors (i.e. try to make it FAST!)
+		// TODO: re-use results in db/img search instead of re-doing tagging
 
-		 String[] labels = null;
+		String[] labels = null;
 
-		 ProcessBuilder pb = new ProcessBuilder("python","/scratch/PyNutrition/scripts/predict.py", "/scratch/PyNutrition-data/semlab.train.tagged.sents", "/scratch/PyNutrition-data/GoogleNews-vectors-negative300.bin", text);
-		 Process p = pb.start();
-		 		  
-		 BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-		 String line = "";
-		 // get labels from output
-		 while ((line = in.readLine()) != null) {
-			 labels = line.split("\t");
-		 }
-		 
-		 // map integer labels to strings
-		 int i = 0;
-		 for (String label : labels){
-			 if (label.equals("1")){
-				 labels[i]="food";
-			 } else if(label.equals("2")){
-				 labels[i]="brand";
-			 } else if(label.equals("3")){
-				 labels[i]="quantity";
-			 } else if(label.equals("4")){
-				 labels[i]="description";
-			 } else if(label.equals("5")){
-				 labels[i]="other";
-			 }
-			 i++;
-		 }
+		ProcessBuilder pb = new ProcessBuilder("python","/scratch/PyNutrition/scripts/predict.py", "/scratch/PyNutrition-data/semlab.train.tagged.sents", "/scratch/PyNutrition-data/GoogleNews-vectors-negative300.bin", text);
+		Process p = pb.start();
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+		String line = "";
+		// get labels from output
+		while ((line = in.readLine()) != null) {
+			labels = line.split("\t");
+		}
+
+		// map integer labels to strings
+		int i = 0;
+		for (String label : labels){
+			if (label.equals("1")){
+				labels[i]="food";
+			} else if(label.equals("2")){
+				labels[i]="brand";
+			} else if(label.equals("3")){
+				labels[i]="quantity";
+			} else if(label.equals("4")){
+				labels[i]="description";
+			} else if(label.equals("5")){
+				labels[i]="other";
+			}
+			i++;
+		}
 		return labels;
 	}
-	
-    /**
-     * Tokenizes, parses, and uses CRF to label given text string.
-     * Then finds the food-attribute dependencies using given method type.
-     * @return 
-     * @throws IOException 
-     * @throws ClassNotFoundException 
-     */
-    public static NLPData runCRF(PrintWriter FSTWriter, String text, String type, SentenceTagger tagger, boolean eval, String labelRep, String tag_type) throws IOException, ClassNotFoundException {
-    	Sentence sentence = new Sentence();
+
+	/**
+	 * Tokenizes, parses, and uses CRF to label given text string.
+	 * Then finds the food-attribute dependencies using given method type.
+	 * @return 
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
+	 */
+	public static NLPData runCRF(PrintWriter FSTWriter, String text, String type, SentenceTagger tagger, boolean eval, String labelRep, String tag_type) throws IOException, ClassNotFoundException {
+		Sentence sentence = new Sentence();
 		sentence.originalText = text;
 		sentence.isNutrition = true;
-		System.out.println("tag type: " + tag_type);
-		System.out.println("original text");
+		System.out.println("tag type Nut103: " + tag_type);
+		System.out.println("original text Nut103");
 		System.out.println(sentence.originalText);
 
 		// run Mallet SimpleTagger to get classes
@@ -177,6 +177,26 @@ public class Tag extends HttpServlet {
 		} else if (tag_type.equals("crfsuite")){
 			labels = runPyNutritionTagger(sentence.originalText);
 		}
+
+		//mandy's code
+		boolean hasFood = false;
+		int index = 0;
+		int lastPropertyIndex = -1;
+		for (String label : labels) {
+			if (label.equals("food")) {
+				hasFood = true;
+				break;
+			} else if (label.equals("brand") || label.equals("description")) {
+				lastPropertyIndex = index;
+			}
+			index++;
+		}
+		if (!hasFood) {
+			labels[lastPropertyIndex] = "food";
+		}
+		System.out.println("has a food label: "+hasFood);
+		System.out.println("last property index: "+lastPropertyIndex);
+
 
 		// add crfClasses to each token (split on spaces)
 		String[] seq = sentence.originalText.split(" ");
@@ -190,6 +210,8 @@ public class Tag extends HttpServlet {
 			token.crfClass = CRFClass.define(uppercaseLabel);
 			sentence.tokens.add(token);
 		}
+
+
 
 		// populate sentence.segments
 		int segmentStart = 0;
@@ -210,44 +232,44 @@ public class Tag extends HttpServlet {
 			sentence.setSegment(segmentStart, segmentEnd);
 			segmentStart = segmentEnd+1;
 		}
-		
+
 		NLPData segmentation = new NLPData(sentence);
 		segmentation.parse = sentence.parse;
 		segmentation.deps = sentence.deps;
-	    			
+
 		// add all food tokens to foodItems ArrayList and segmentDeps map
 		ArrayList<CRFToken> foodItems = new ArrayList<>();
 		ArrayList<String> foods = new ArrayList<>();
 		for(CRFToken token : sentence.tokens){
-        	if (token.crfClass!=null) {
-        		// check if food and add to food list
-        		if (token.crfClass.toString().contains("Food")) {
-        			foodItems.add(token);
-        			foods.add(token.text+token.position);
-        			ArrayList<Segment> attrList = new ArrayList<Segment>();
-        		} 
-        	}
-        }
+			if (token.crfClass!=null) {
+				// check if food and add to food list
+				if (token.crfClass.toString().contains("Food")) {
+					foodItems.add(token);
+					foods.add(token.text+token.position);
+					ArrayList<Segment> attrList = new ArrayList<Segment>();
+				} 
+			}
+		}
 		segmentation.foods = foods;
 
-	    // get all food-attribute dependencies (method type is an argument)
-	    segmentation.attributes = GetAttributesCRF.getAttributeDeps(sentence, segmentation, foodItems, labelRep);
+		// get all food-attribute dependencies (method type is an argument)
+		segmentation.attributes = GetAttributesCRF.getAttributeDeps(sentence, segmentation, foodItems, labelRep);
 
-	    return segmentation;
-    }
-    
-    public static Map<String, ArrayList<Segment>> initializeSegmentDeps(ArrayList<CRFToken> foodItems){
+		return segmentation;
+	}
+
+	public static Map<String, ArrayList<Segment>> initializeSegmentDeps(ArrayList<CRFToken> foodItems){
 		// maps food tokens to list of attribute segments
 		Map <String, ArrayList<Segment>> segmentDeps = new HashMap<>();
-		
+
 		for(CRFToken food : foodItems){
-        	ArrayList<Segment> attrList = new ArrayList<Segment>();
+			ArrayList<Segment> attrList = new ArrayList<Segment>();
 			// append index to food text to avoid overwriting repeats
-        	segmentDeps.put(food.text+food.position, attrList);
-        }
-    	return segmentDeps;
-    }
-    
+			segmentDeps.put(food.text+food.position, attrList);
+		}
+		return segmentDeps;
+	}
+
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
@@ -262,7 +284,7 @@ public class Tag extends HttpServlet {
 		String tag_type = request.getParameter("tag_type");
 		System.out.println("labelRep: "+labelRep);
 		System.out.println(text);
-		
+
 		// run CRF and get food-attribute dependencies
 		PrintWriter FSTWriter = null;
 		Object result = null;
@@ -278,7 +300,7 @@ public class Tag extends HttpServlet {
 		response.setContentType("application/javascript");
 		PrintWriter writer = response.getWriter();
 		objectMapper.writeValue(writer, result);
-		
+
 	}
 
 	/**
